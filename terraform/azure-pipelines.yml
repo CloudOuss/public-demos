@@ -74,7 +74,7 @@ stages:
     pool:
       vmImage: 'ubuntu-16.04'
     variables:
-    - group: Release
+    - group: ReleaseGroup
     steps:
     - script: |
         # Exit when any command returns a failure status.
