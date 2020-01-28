@@ -67,8 +67,9 @@ stages:
         workingDirectory: '$(rootDir)'
 
     - task: CopyFiles@2
+      displayName: 'Copy the infrastructure definition'
       inputs:
-        SourceFolder: '$(rootDir)/main.tf'
+        SourceFolder: '$(rootDir)/terraform'
         Contents: '**'
         TargetFolder: '$(Build.ArtifactStagingDirectory)/terraform'
 
