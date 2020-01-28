@@ -90,7 +90,7 @@ stages:
     - download: current
       artifact: drop
 
-    - script: |
+    - powershell: |
         # Exit when any command returns a failure status.
         set -e
         # Write terraform.tfvars.
@@ -109,8 +109,8 @@ stages:
         AppService=$(terraform output appservice_name)
 
         # Write the WebAppName variable to the pipeline.
-        echo "##vso[task.setvariable variable=WebAppName;isOutput=true;]$AppService"
-      name: 'RunTerraform'
+        echo "##vso[task.setvariable variable=WebAppName;isOutput=true]$AppService"
+      name: RunTerraform
       workingDirectory: '$(Pipeline.Workspace)/drop/terraform'
       displayName: 'Run Terraform'
       env:
@@ -124,7 +124,7 @@ stages:
   - deployment: Deploy
     dependsOn: Provision
     variables:
-      GeneratedWebAppName: $[ dependencies.Provision.outputs['Provision.RunTerraform.WebAppName'] ] 
+      GeneratedWebAppName: $[ dependencies.Provision.outputs['RunTerraform.WebAppName'] ]
     pool:
       vmImage: 'ubuntu-16.04'
     environment: dev
@@ -135,11 +135,10 @@ stages:
           - download: current
             artifact: drop
             
-          - script: 'echo $(GeneratedWebAppName)'
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
               appType: webAppLinux
               azureSubscription: 'terraform-lab-service-connection'
-              appName: '$(GeneratedWebAppName)'
+              appName: $(GeneratedWebAppName)
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
