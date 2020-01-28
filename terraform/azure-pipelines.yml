@@ -90,7 +90,7 @@ stages:
     - download: current
       artifact: drop
 
-    - powershell: |
+    - bash: |
         # Exit when any command returns a failure status.
         set -e
         # Write terraform.tfvars.
@@ -118,6 +118,7 @@ stages:
         ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
         ARM_TENANT_ID: $(ARM_TENANT_ID)
         ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID) 
+        
     - script: echo $(RunTerraform.WebAppName)
       name: EchoTerraform
 
@@ -126,7 +127,7 @@ stages:
     variables:
       GeneratedWebAppName: $[ dependencies.Provision.outputs['RunTerraform.WebAppName'] ]
     pool:
-      vmImage: 'ubuntu-16.04'
+      vmImage: 'ubuntu-latest'
     environment: dev
     strategy:
       runOnce:
