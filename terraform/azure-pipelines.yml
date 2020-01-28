@@ -68,13 +68,13 @@ stages:
 - stage: 'Dev'
   displayName: 'Deploy to the dev environment'
   dependsOn: Build
+  variables:
+  - group: ReleaseGroup
   jobs:
   - job: Provision
     displayName: 'Provision Azure App Service'
     pool:
       vmImage: 'ubuntu-16.04'
-    variables:
-    - group: ReleaseGroup
     steps:
     - script: |
         # Exit when any command returns a failure status.
@@ -110,7 +110,6 @@ stages:
     variables:
       - name: WebAppNameDev
         value: $[ dependencies.Provision.outputs['RunTerraform.WebAppNameDev'] ] 
-      - group: ReleaseGroup
     pool:
       vmImage: 'ubuntu-16.04'
     environment: dev
