@@ -108,7 +108,9 @@ stages:
   - deployment: Deploy
     dependsOn: Provision
     variables:
-      WebAppNameDev: $[ dependencies.Provision.outputs['RunTerraform.WebAppNameDev'] ] 
+      - name: WebAppNameDev
+        value: $[ dependencies.Provision.outputs['RunTerraform.WebAppNameDev'] ] 
+      - group: ReleaseGroup
     pool:
       vmImage: 'ubuntu-16.04'
     environment: dev
@@ -121,6 +123,6 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
-              azureSubscription: $(TfServiceConnection)
+              azureSubscription: '$(TfServiceConnection)'
               appName: '$(WebAppNameDev)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
