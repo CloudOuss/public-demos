@@ -29,6 +29,7 @@ stages:
     - task: Npm@1
       displayName: 'Run npm install'
       inputs:
+        workingDir: '$(rootDir)'
         verbose: false
 
     - script: '$(rootDir)/node_modules/.bin/node-sass $(wwwrootDir) --output $(wwwrootDir)'
