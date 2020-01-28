@@ -93,7 +93,9 @@ stages:
         downloadType: 'single'
         artifactName: 'drop'
         downloadPath: '$(System.ArtifactsDirectory)'
-    - script: 'echo ls $(System.ArtifactsDirectory)'
+
+    - task: Bash@3
+
     - script: |
         # Exit when any command returns a failure status.
         set -e
