@@ -66,6 +66,12 @@ stages:
         zipAfterPublish: true
         workingDirectory: '$(rootDir)'
 
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: '$(rootDir)/main.tf'
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/terraform'
+
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
 
@@ -80,6 +86,13 @@ stages:
     pool:
       vmImage: 'ubuntu-16.04'
     steps:
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop'
+        downloadPath: '$(System.ArtifactsDirectory)'
+        
     - script: |
         # Exit when any command returns a failure status.
         set -e
@@ -103,6 +116,8 @@ stages:
         # Write the WebAppNameDev variable to the pipeline.
         echo "##vso[task.setvariable variable=WebAppNameDev;isOutput=true]$WebAppNameDev"
       name: 'RunTerraform'
+      workingDirectory: $(System.ArtifactsDirectory)/drop/terraform
+
       displayName: 'Run Terraform'
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
