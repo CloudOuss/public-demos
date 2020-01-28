@@ -37,6 +37,8 @@ stages:
 
     - task: gulp@1
       displayName: 'Run gulp tasks'
+      inputs:
+        workingDirectory: '$(rootDir)'
 
     - task: DotNetCoreCLI@2
       displayName: 'Restore project dependencies'
@@ -59,6 +61,7 @@ stages:
         publishWebProjects: false
         arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
         zipAfterPublish: true
+        workingDirectory: '$(rootDir)'
 
     - publish: '$(Build.ArtifactStagingDirectory)'
       artifact: drop
