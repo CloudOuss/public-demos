@@ -1,8 +1,10 @@
-terraform {
-  required_version = "> 0.12.0"
+provider "azurerm" {
+  version = "=2.26.0"
+  features {}
+}
 
-  backend "azurerm" {
-  }
+terraform {
+  backend "azurerm" {}
 }
 
 variable "resource_group_name" {
